@@ -44,6 +44,10 @@ exports.updateUser = async (req, res) => {
       req.body.password = await bcrypt.hash(req.body.password, 12);
     }
 
+    if(req.user.id !== req.params.id){
+      return res.status(403).json({ message: 'You are not authorized to update this user' });
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
